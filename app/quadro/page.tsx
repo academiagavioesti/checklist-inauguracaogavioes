@@ -1,0 +1,1 @@
+import {Quadro} from "@/components/quadro";import {PageHeader} from "@/components/page-header";export default function Page(){return <div className="mx-auto w-full max-w-6xl px-4 py-6 md:px-8 md:py-8"><PageHeader title="Quadro" description="Acompanhe os termos por etapa."/><Quadro/></div>}

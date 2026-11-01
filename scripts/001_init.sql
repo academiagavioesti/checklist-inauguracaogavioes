@@ -1,0 +1,33 @@
+-- DOCUMENTAÇÃO DO SCHEMA REAL DO SUPABASE
+-- Esta migração já foi aplicada externamente. NÃO executar nem recriar neste projeto.
+-- A fonte de verdade é o banco Supabase conectado.
+--
+-- Tabelas públicas aplicadas:
+--   profiles (id -> auth.users.id, nome, email, role admin|user, ativo, created_at)
+--   termos (termos de responsabilidade, status e payload jsonb)
+--   termo_eventos (histórico de transições de termos)
+--   app_settings (key/value jsonb)
+--   dominios_permitidos (domínios autorizados para cadastro público)
+--
+-- Segurança aplicada no Supabase:
+--   RLS nas tabelas públicas.
+--   funções is_admin() e is_active_member().
+--   triggers em auth.users para validar domínio, escolher o primeiro admin,
+--   criar profiles ativos e copiar raw_user_meta_data->>'nome'.
+--   Políticas de leitura/escrita administrativas e por membro ativo.
+--
+-- Colunas confirmadas no snapshot do banco:
+-- profiles: id uuid primary key references auth.users(id), nome text nullable,
+-- email text nullable, role text default 'user', ativo boolean default true,
+-- created_at timestamptz default now().
+-- termos: id uuid default gen_random_uuid(), created_at timestamptz default now(),
+-- created_by uuid, created_by_nome text default '', nome text, cpf text, tipo text,
+-- tipo_label text, nome_outro text default '', marca text default '', modelo text default '',
+-- specific_label text default '', specific_value text default '', acessorios text default '',
+-- data_termo text, unidade text default '', observacao text default '',
+-- status text default 'termo_gerado', status_changed_at timestamptz default now(),
+-- status_changed_by uuid nullable, termo jsonb nullable.
+-- termo_eventos: id uuid, termo_id uuid, de text, para text, por uuid nullable,
+-- por_nome text default '', em timestamptz default now().
+-- app_settings: key text primary key, value jsonb, updated_at timestamptz default now(),
+-- updated_by uuid nullable.
