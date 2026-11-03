@@ -6,7 +6,6 @@ import { Building2, Download, Eye, FileText, Laptop, Pencil, User } from "lucide
 import { DEFAULT_COMPANY, EQUIPMENT_TYPES, getEquipmentType, OUTROS_ID } from "@/lib/equipment-config"
 import { generateTermoPdf, slugify } from "@/lib/generate-pdf"
 import { buildLogEntry, saveLogEntry } from "@/lib/log"
-import { useSettings } from "@/lib/settings"
 import type { TermoData } from "@/lib/termos"
 
 export function Label({ children, htmlFor }: { children: React.ReactNode; htmlFor?: string }) { return <label htmlFor={htmlFor} className="mb-1.5 block text-sm font-medium text-foreground">{children}</label> }
@@ -19,7 +18,7 @@ function dateBR(v: string) { const [y,m,d]=v.split("-"); return y&&m&&d ? `${d}/
 function validCpf(value: string) { const digits=value.replace(/\D/g,""); if(digits.length!==11||/^([0-9])\1+$/.test(digits)) return false; for(let length=9;length<=10;length++){let sum=0;for(let i=0;i<length;i++)sum+=Number(digits[i])*(length+1-i);const check=(sum*10)%11%10;if(check!==Number(digits[length]))return false}return true }
 
 export function TermoForm() {
-  const [settings,,loaded] = useSettings(); const [company,setCompany] = useState(DEFAULT_COMPANY); const [editable,setEditable] = useState(false)
+  const settings = { signers: [] as Array<{ id: string; label: string; nome?: string; kind?: string }>, clauses: [] }; const loaded = true; const [company,setCompany] = useState(DEFAULT_COMPANY); const [editable,setEditable] = useState(false)
   const [nome,setNome]=useState(""); const [cpf,setCpf]=useState(""); const [data,setData]=useState(today()); const [tipo,setTipo]=useState(EQUIPMENT_TYPES[0].id); const [marca,setMarca]=useState(""); const [modelo,setModelo]=useState(""); const [specific,setSpecific]=useState(""); const [acessorios,setAcessorios]=useState(""); const [outroNome,setOutroNome]=useState(""); const [included,setIncluded]=useState<Record<string,boolean>>({}); const [names,setNames]=useState<Record<string,string>>({}); const [error,setError]=useState(""); const [success,setSuccess]=useState("")
   const eq=useMemo(()=>getEquipmentType(tipo),[tipo])
   function buildData(): TermoData { const signers=settings.signers.map((s)=>({label:s.label,nome:s.kind === "usuario" ? nome.trim() : (names[s.id] ?? s.nome ?? "").trim()})).filter((s,i)=>settings.signers[i].kind === "usuario" || included[settings.signers[i].id] !== false); return {company,colaborador:{nome:nome.trim(),cpf:cpf.trim(),data:dateBR(data)},equipamento:{tipo,marca:marca.trim(),modelo:modelo.trim(),specificValue:specific.trim(),acessorios:acessorios.trim(),outroNome:tipo===OUTROS_ID?outroNome.trim():undefined},signers,clauses:settings.clauses} }
