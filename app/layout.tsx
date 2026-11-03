@@ -8,9 +8,9 @@ const barlow = Barlow({ variable: '--font-barlow', subsets: ['latin'], weight: [
 const barlowCondensed = Barlow_Condensed({ variable: '--font-barlow-condensed', subsets: ['latin'], weight: ['600','700'] })
 
 export const metadata: Metadata = {
-  title: 'Gerador de Termos de Equipamento de T.I',
+  title: 'Checklist de Inauguração | Academia Gaviões',
   description:
-    'Gere em PDF o Termo de Responsabilidade e o Termo de Recebimento de equipamentos de T.I preenchendo um formulário simples.',
+    'Acompanhe a preparação de unidades e computadores para inauguração na Academia Gaviões.',
   generator: 'v0.app',
   icons: {
     icon: '/icon.svg',
